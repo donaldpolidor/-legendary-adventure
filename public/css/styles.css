@@ -173,7 +173,7 @@ nav .main-nav li a:focus {
   transform: scale(1.05);
 }
 
-/* Upgrades grid with better contrast */
+/* Upgrades grid */
 .upgrades-grid{
   display: grid;
   grid-template-columns: repeat(2, 1fr);
@@ -270,6 +270,7 @@ footer {
     max-width: 350px;
     padding: 2rem;
   }
+
   .upgrades-grid { 
     grid-template-columns: repeat(4, 1fr); 
   }
@@ -344,16 +345,16 @@ footer {
     width: 160px;
   }
   
+
   .upgrades-grid {
     grid-template-columns: repeat(2, 1fr);
     gap: 0.75rem;
   }
-  
-  /* Adjustment for very small screens */
-  @media (max-width: 480px) {
-    .upgrades-grid {
-      grid-template-columns: 1fr;
-      gap: 0.5rem;
-    }
+}
+
+@media (max-width: 480px) {
+  .upgrades-grid {
+    grid-template-columns: 1fr;
+    gap: 0.5rem;
   }
 }
