@@ -7,44 +7,82 @@ const invCont = {}
  *  Build inventory by classification view
  * ************************** */
 invCont.buildByClassificationId = async function (req, res, next) {
-  const classification_id = req.params.classificationId
-  const data = await invModel.getInventoryByClassificationId(classification_id)
-  const grid = await utilities.buildClassificationGrid(data)
-  let nav = await utilities.getNav()
-  const className = data[0].classification_name
-  res.render("./inventory/classification", {
-    title: className + " vehicles",
-    nav,
-    grid,
-  })
+  try {
+    const classification_id = req.params.classificationId
+    const data = await invModel.getInventoryByClassificationId(classification_id)
+    
+    // GESTION D'ERREUR - Si pas de données
+    if (!data || data.length === 0) {
+      let nav = await utilities.getNav()
+      return res.render("./inventory/classification", {
+        title: "Vehicles",
+        nav,
+        grid: '<p class="notice">Sorry, no vehicles found in this category.</p>',
+      })
+    }
+    
+    const grid = await utilities.buildClassificationGrid(data)
+    let nav = await utilities.getNav()
+    const className = data[0].classification_name
+    
+    res.render("./inventory/classification", {
+      title: className + " vehicles",
+      nav,
+      grid,
+    })
+  } catch (error) {
+    console.error("buildByClassificationId error:", error.message)
+    // Fallback pour les erreurs de base de données
+    let nav = utilities.getFallbackNav ? await utilities.getFallbackNav() : '<ul class="main-nav"><li><a href="/">Home</a></li></ul>'
+    res.render("./inventory/classification", {
+      title: "Vehicles",
+      nav,
+      grid: '<p class="notice">Error loading vehicles. Please try again later.</p>',
+    })
+  }
 }
 
 /* ***************************
  *  Build vehicle detail view
- *  Assignment 3, Task 1
  * ************************** */
 invCont.buildDetail = async function (req, res, next) {
-  const inv_id = req.params.invId
-  const vehicleData = await invModel.getInventoryById(inv_id)
-  
-  if (!vehicleData) {
-    return next({ status: 404, message: "Vehicle not found" })
+  try {
+    const invId = req.params.id
+    const vehicle = await invModel.getInventoryById(invId)
+    
+    // GESTION D'ERREUR - Si véhicule non trouvé
+    if (!vehicle) {
+      let nav = await utilities.getNav()
+      return res.render("./inventory/detail", {
+        title: "Vehicle Not Found",
+        nav,
+        htmlData: '<p class="notice">Sorry, the requested vehicle could not be found.</p>',
+      })
+    }
+    
+    const htmlData = await utilities.buildSingleVehicleDisplay(vehicle)
+    let nav = await utilities.getNav()
+    const vehicleTitle = `${vehicle.inv_year} ${vehicle.inv_make} ${vehicle.inv_model}`
+    
+    res.render("./inventory/detail", {
+      title: vehicleTitle,
+      nav,
+      htmlData,
+    })
+  } catch (error) {
+    console.error("buildDetail error:", error.message)
+    // Fallback pour les erreurs
+    let nav = utilities.getFallbackNav ? await utilities.getFallbackNav() : '<ul class="main-nav"><li><a href="/">Home</a></li></ul>'
+    res.render("./inventory/detail", {
+      title: "Error",
+      nav,
+      htmlData: '<p class="notice">Error loading vehicle details. Please try again later.</p>',
+    })
   }
-  
-  const htmlData = await utilities.buildSingleVehicleDisplay(vehicleData)
-  let nav = await utilities.getNav()
-  const vehicleTitle = `${vehicleData.inv_year} ${vehicleData.inv_make} ${vehicleData.inv_model}`
-  
-  res.render("./inventory/detail", {
-    title: vehicleTitle,
-    nav,
-    htmlData,
-  })
 }
 
 /* ****************************************
  *  Process intentional error
- *  Assignment 3, Task 3
  * ************************************ */
 invCont.throwError = async function (req, res, next) {
   // Intentional error for testing

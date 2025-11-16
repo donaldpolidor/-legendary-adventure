@@ -12,7 +12,7 @@ Util.getNav = async function () {
     // GESTION D'ERREUR AMÉLIORÉE
     if (!data || !data.rows || !Array.isArray(data.rows)) {
       console.error("Invalid data structure from database")
-      return this.getFallbackNav()
+      return Util.getFallbackNav() // CORRECTION: Util au lieu de this
     }
     
     let list = "<ul class='main-nav'>"
@@ -30,7 +30,7 @@ Util.getNav = async function () {
     return list
   } catch (error) {
     console.error("getNav error:", error.message)
-    return this.getFallbackNav()
+    return Util.getFallbackNav() // CORRECTION: Util au lieu de this
   }
 }
 
