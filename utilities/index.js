@@ -8,8 +8,16 @@ const Util = {}
 Util.getNav = async function () {
   try {
     let data = await invModel.getClassifications()
+    
+    // GESTION D'ERREUR AMÉLIORÉE
+    if (!data || !data.rows || !Array.isArray(data.rows)) {
+      console.error("Invalid data structure from database")
+      return this.getFallbackNav()
+    }
+    
     let list = "<ul class='main-nav'>"
     list += '<li><a href="/" title="Home page">Home</a></li>'
+    
     data.rows.forEach((row) => {
       list += "<li>"
       list += '<a href="/inv/type/' + row.classification_id + 
@@ -17,12 +25,30 @@ Util.getNav = async function () {
               ' vehicles">' + row.classification_name + "</a>"
       list += "</li>"
     })
+    
     list += "</ul>"
     return list
   } catch (error) {
-    console.error("getNav error:", error)
-    return '<ul class="main-nav"><li><a href="/">Home</a></li></ul>'
+    console.error("getNav error:", error.message)
+    return this.getFallbackNav()
   }
+}
+
+/* **************************************
+ * Fallback navigation when DB fails
+ ************************************** */
+Util.getFallbackNav = function () {
+  console.log("Using fallback navigation")
+  return `
+    <ul class="main-nav">
+      <li><a href="/" title="Home page">Home</a></li>
+      <li><a href="/inv/type/1" title="Custom Vehicles">Custom</a></li>
+      <li><a href="/inv/type/2" title="Sedan Vehicles">Sedan</a></li>
+      <li><a href="/inv/type/3" title="Sport Vehicles">Sport</a></li>
+      <li><a href="/inv/type/4" title="SUV Vehicles">SUV</a></li>
+      <li><a href="/inv/type/5" title="Truck Vehicles">Truck</a></li>
+    </ul>
+  `
 }
 
 /* **************************************
@@ -31,7 +57,7 @@ Util.getNav = async function () {
 Util.buildClassificationGrid = async function(data){
   try {
     let grid = ''
-    if(data.length > 0){
+    if(data && data.length > 0){
       grid = '<ul id="inv-display" class="classification-grid">'
       data.forEach(vehicle => { 
         grid += '<li class="vehicle-card">'
@@ -65,11 +91,13 @@ Util.buildClassificationGrid = async function(data){
 
 /* ****************************************
  * Build the vehicle detail HTML
- * Assignment 3, Task 1
  **************************************** */
 Util.buildSingleVehicleDisplay = async function(vehicle) {
   try {
-    // Format price with proper currency formatting
+    if (!vehicle) {
+      return '<p class="notice">Vehicle not found.</p>'
+    }
+
     const formattedPrice = new Intl.NumberFormat('en-US', {
       style: 'currency',
       currency: 'USD',
@@ -77,49 +105,25 @@ Util.buildSingleVehicleDisplay = async function(vehicle) {
       maximumFractionDigits: 0
     }).format(vehicle.inv_price)
 
-    // Format mileage with commas
     const formattedMileage = new Intl.NumberFormat('en-US').format(vehicle.inv_miles)
 
     let svd = '<div class="vehicle-detail-container">'
     svd += '<div class="vehicle-detail-grid">'
-    
-    // Image section
     svd += '<div class="vehicle-image-section">'
     svd += '<img src="' + vehicle.inv_image + 
            '" alt="Image of ' + vehicle.inv_make + ' ' + vehicle.inv_model + 
            ' on CSE Motors" class="vehicle-detail-image">'
     svd += '</div>'
-    
-    // Info section
     svd += '<div class="vehicle-info-section">'
     svd += '<h1 class="vehicle-detail-title">' + vehicle.inv_make + ' ' + vehicle.inv_model + '</h1>'
     svd += '<div class="vehicle-price-large">' + formattedPrice + '</div>'
-    
-    // Specifications
     svd += '<div class="vehicle-specs">'
-    svd += '<div class="spec-item">'
-    svd += '<span class="spec-label">Year:</span>'
-    svd += '<span class="spec-value">' + vehicle.inv_year + '</span>'
+    svd += '<div class="spec-item"><span class="spec-label">Year:</span><span class="spec-value">' + vehicle.inv_year + '</span></div>'
+    svd += '<div class="spec-item"><span class="spec-label">Mileage:</span><span class="spec-value">' + formattedMileage + ' miles</span></div>'
+    svd += '<div class="spec-item"><span class="spec-label">Color:</span><span class="spec-value">' + vehicle.inv_color + '</span></div>'
     svd += '</div>'
-    svd += '<div class="spec-item">'
-    svd += '<span class="spec-label">Mileage:</span>'
-    svd += '<span class="spec-value">' + formattedMileage + ' miles</span>'
-    svd += '</div>'
-    svd += '<div class="spec-item">'
-    svd += '<span class="spec-label">Color:</span>'
-    svd += '<span class="spec-value">' + vehicle.inv_color + '</span>'
-    svd += '</div>'
-    svd += '</div>'
-    
-    // Description
-    svd += '<div class="vehicle-description">'
-    svd += '<h3>Vehicle Description</h3>'
-    svd += '<p>' + vehicle.inv_description + '</p>'
-    svd += '</div>'
-    
-    svd += '</div>' // Close info section
-    svd += '</div>' // Close grid
-    svd += '</div>' // Close container
+    svd += '<div class="vehicle-description"><h3>Vehicle Description</h3><p>' + vehicle.inv_description + '</p></div>'
+    svd += '</div></div></div>'
     
     return svd
   } catch (error) {
@@ -130,8 +134,6 @@ Util.buildSingleVehicleDisplay = async function(vehicle) {
 
 /* ****************************************
  * Middleware For Handling Errors
- * Wrap other function in this for 
- * General Error Handling
  **************************************** */
 Util.handleErrors = fn => (req, res, next) => {
   return Promise.resolve(fn(req, res, next)).catch(next)

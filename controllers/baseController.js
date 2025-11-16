@@ -12,7 +12,15 @@ baseController.buildHome = async function(req, res, next) {
       message: null
     });
   } catch (error) {
-    next(error);
+    console.error("buildHome error:", error.message);
+    // Use fallback navigation directly
+    let nav = utilities.getFallbackNav();
+    res.render("index", {
+      title: "Home", 
+      nav,
+      errors: null,
+      message: null
+    });
   }
 };
 
