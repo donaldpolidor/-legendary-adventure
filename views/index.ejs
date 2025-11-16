@@ -1,23 +1,57 @@
 <%# Unit 1, Assignment 1 %>
-<h1>Welcome to CSE Motors!</h1>
+<h1 class="welcome-banner">Welcome to CSE Motors!</h1>
 <%# Unit 4, Sessions & Messages activity %>
 <%- messages() %>
 
-<section id="hero">
-
-  <ul>
-    <li>
-      <h2>DMC Delorean</h2>
-    </li>
-    <li>3 Cup holders</li>
-    <li>Superman doors</li>
-    <li>Fuzzy dice!</li>
-    <li><button id="actionbtn">Own Today</button></li>
-  </ul>
-
+<section class="hero">
+  <div class="hero-image">
+    <img src="/images/vehicles/delorean.jpg" alt="DMC Delorean">
+  </div>
+  <div class="hero-info">
+    <a href="#" class="hero-title">DMC Delorean</a>
+    <ul class="hero-features">
+      <li>3 Cup holders</li>
+      <li>Superman doors</li>
+      <li>Fuzzy dice!</li>
+    </ul>
+    <a href="#" class="cta">
+      <img src="/images/site/own_today.png" alt="Own Today">
+    </a>
+  </div>
 </section>
-<div class="flex-content">
-  <section id="review">
+
+<div class="main-content">
+  <section class="upgrades">
+    <h2>Delorean Upgrades</h2>
+    <div class="upgrades-grid">
+      <div class="upgrade">
+        <a href="#" title="Flux Capacitor">
+          <img src="/images/upgrades/flux-cap.png" alt="Flux Capacitor">
+          <span>Flux Capacitor</span>
+        </a>
+      </div>
+      <div class="upgrade">
+        <a href="#" title="Flame Decals">
+          <img src="/images/upgrades/flame.jpg" alt="Flame Decals">
+          <span>Flame Decals</span>
+        </a>
+      </div>
+      <div class="upgrade">
+        <a href="#" title="Bumper Stickers">
+          <img src="/images/upgrades/bumper_sticker.jpg" alt="Bumper Stickers">
+          <span>Bumper Stickers</span>
+        </a>
+      </div>
+      <div class="upgrade">
+        <a href="#" title="Hub Caps">
+          <img src="/images/upgrades/hub-cap.jpg" alt="Hub Caps">
+          <span>Hub Caps</span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <section class="reviews">
     <h2>DMC Delorean Reviews</h2>
     <ul>
       <li>"So fast it's almost like traveling in time." (4/5)</li>
@@ -27,39 +61,4 @@
       <li>"80's livin and I love it!" (5/5)</li>
     </ul>
   </section>
-  <section id="add-ons">
-    <h2>Delorean Upgrades</h2>
-    <div class="flex">
-      <a href="#" title="flux-capacitor">
-        <figure>
-
-          <div class="add-col"><img src="./images/upgrades/flux-cap.png" alt="Flux-Capacitor"></div>
-          <figcaption>Flux Capacitor</figcaption>
-        </figure>
-      </a>
-      <a href="#" title="flame decals">
-        <figure>
-          <div class="add-col"><img src="./images/upgrades/flame.jpg" alt="flame decal"></div>
-          <figcaption>Flame Decals</figcaption>
-        </figure>
-      </a>
-
-    </div>
-    <div class="flex">
-      <a href="#" title="bumper stickers">
-        <figure>
-          <div class="add-col"><img src="./images/upgrades/bumper_sticker.jpg" alt="Bumper Stickers"> </div>
-          <figcaption>Bumper Stickers</figcaption>
-        </figure>
-      </a>
-      <a href="#" title="hub caps">
-        <figure>
-          <div class="add-col"><img src="./images/upgrades/hub-cap.jpg" alt="Hub Caps"></div>
-          <figcaption>Hub Caps</figcaption>
-        </figure>
-      </a>
-
-    </div>
-  </section>
-
 </div>

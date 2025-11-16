@@ -4,23 +4,19 @@ const router = new express.Router()
 const invController = require("../controllers/invController")
 const utilities = require("../utilities")
 
-router.get("/type/:classificationId", invController.buildByClassificationId);
-
+// Route existante
+router.get("/type/:classificationId", utilities.handleErrors(invController.buildByClassificationId));
 
 /* ****************************************
  * Route to build vehicle detail view
+ * Assignment 3, Task 1
  **************************************** */
-router.get("/detail/:id", 
-utilities.handleErrors(invController.buildDetail))
+router.get("/detail/:invId", utilities.handleErrors(invController.buildDetail))
 
 /* ****************************************
  * Error Route
  * Assignment 3, Task 3
  **************************************** */
-router.get(
-  "/broken",
-  utilities.handleErrors(invController.throwError)
-)
-
+router.get("/broken", utilities.handleErrors(invController.throwError))
 
 module.exports = router;

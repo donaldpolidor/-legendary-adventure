@@ -24,16 +24,20 @@ invCont.buildByClassificationId = async function (req, res, next) {
  *  Assignment 3, Task 1
  * ************************** */
 invCont.buildDetail = async function (req, res, next) {
-  const invId = req.params.id
-  let vehicle = await invModel.getInventoryById(invId)
-  const htmlData = await utilities.buildSingleVehicleDisplay(vehicle)
+  const inv_id = req.params.invId
+  const vehicleData = await invModel.getInventoryById(inv_id)
+  
+  if (!vehicleData) {
+    return next({ status: 404, message: "Vehicle not found" })
+  }
+  
+  const htmlData = await utilities.buildSingleVehicleDisplay(vehicleData)
   let nav = await utilities.getNav()
-  const vehicleTitle =
-    vehicle.inv_year + " " + vehicle.inv_make + " " + vehicle.inv_model
+  const vehicleTitle = `${vehicleData.inv_year} ${vehicleData.inv_make} ${vehicleData.inv_model}`
+  
   res.render("./inventory/detail", {
     title: vehicleTitle,
     nav,
-    message: null,
     htmlData,
   })
 }
@@ -42,9 +46,9 @@ invCont.buildDetail = async function (req, res, next) {
  *  Process intentional error
  *  Assignment 3, Task 3
  * ************************************ */
-invCont.throwError = async function (req, res) {
-  throw new Error("I am an intentional error")
+invCont.throwError = async function (req, res, next) {
+  // Intentional error for testing
+  throw new Error("Intentional 500 Error - This is a test error for assignment 3")
 }
-
 
 module.exports = invCont

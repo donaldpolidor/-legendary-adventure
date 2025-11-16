@@ -1,13 +1,19 @@
-const utilities = require("../utilities/")
-const baseController = {}
+const utilities = require("../utilities");
 
-baseController.buildHome = async function(req, res){
-  const nav = await utilities.getNav()
-  res.render("index", {title: "Home", nav})
-}
+const baseController = {};
 
-baseController.triggerError = async function (req, res, next) {
-  throw new Error("500 Server Error")  
-}
+baseController.buildHome = async function(req, res, next) {
+  try {
+    let nav = await utilities.getNav();
+    res.render("index", {
+      title: "Home",
+      nav,
+      errors: null,
+      message: null
+    });
+  } catch (error) {
+    next(error);
+  }
+};
 
-module.exports = baseController
+module.exports = baseController;
