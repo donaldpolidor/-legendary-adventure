@@ -5,11 +5,13 @@ const pool = require("../database/")
  * ************************** */
 async function getClassifications(){
   try {
+    // Petit délai pour laisser la DB Render se réveiller
+    await new Promise(resolve => setTimeout(resolve, 1000))
     const data = await pool.query("SELECT * FROM public.classification ORDER BY classification_name")
-    return data
+    return data.rows // CORRECTION: retourner data.rows au lieu de data
   } catch (error) {
     console.error("getClassifications error: " + error)
-    return error
+    throw error // CORRECTION: throw au lieu de return error
   }
 }
 
@@ -28,7 +30,7 @@ async function getInventoryByClassificationId(classification_id) {
     return data.rows
   } catch (error) {
     console.error("getInventoryByClassificationId error: " + error)
-    return error
+    throw error // CORRECTION: throw au lieu de return error
   }
 }
 
@@ -48,7 +50,7 @@ async function getInventoryById(inv_id) {
     return data.rows[0] || null
   } catch (error) {
     console.error("getInventoryById error: " + error)
-    return error
+    throw error // CORRECTION: throw au lieu de return error
   }
 }
 
