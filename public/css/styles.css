@@ -15,6 +15,13 @@
   --error: #dc3545;
 }
 
+/* CORRECTION: Ensure ALL images are responsive by default */
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
 body {
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
   color: var(--text);
@@ -171,7 +178,7 @@ main {
   box-shadow: 0 8px 20px rgba(0,0,0,0.15);
 }
 
-/* Vehicle thumbnails with proper object-fit */
+/* CORRECTION: Enhanced vehicle thumbnails for all screens */
 .vehicle-thumbnail {
   width: 100%;
   height: 200px;
@@ -228,7 +235,7 @@ main {
   text-align: center;
 }
 
-/* CORRECTION: Vehicle detail image responsive fix */
+/* CORRECTION: Vehicle detail image responsive for all screens */
 .vehicle-detail-image {
   width: 100%;
   max-width: 100%;
@@ -373,11 +380,13 @@ main {
   justify-content: center;
 }
 
+/* CORRECTION: Hero image responsive */
 .hero-image img {
   width: 100%;
   max-width: 800px;
   height: auto;
   border-radius: 8px;
+  object-fit: contain;
 }
 
 .hero-info {
@@ -430,11 +439,13 @@ main {
   margin-top: 1.25rem;
 }
 
+/* CORRECTION: CTA image responsive */
 .cta img {
   width: 180px;
   height: auto;
   display: block;
   transition: transform 0.2s ease;
+  max-width: 100%;
 }
 
 .cta:hover img,
@@ -461,6 +472,8 @@ main {
   transform: translateY(-3px);
   box-shadow: 0 6px 12px rgba(0,0,0,0.15);
 }
+
+/* CORRECTION: Upgrade images responsive */
 .upgrade img {
   width: 100%;
   height: auto;
@@ -470,6 +483,7 @@ main {
   background: #fff;
   border-radius: 6px;
   padding: 8px;
+  object-fit: contain;
 }
 .upgrade a { 
   color: #ffffff; 
@@ -640,7 +654,7 @@ footer {
   }
 }
 
-/* CORRECTION: Enhanced mobile styles for images */
+/* CORRECTION: Enhanced mobile styles for ALL images */
 @media (max-width: 768px) {
   .vehicle-detail-grid {
     grid-template-columns: 1fr;
@@ -673,6 +687,16 @@ footer {
     flex-direction: column;
     gap: 0.25rem;
   }
+  
+  /* CORRECTION: Hero image mobile optimization */
+  .hero-image img {
+    max-height: 300px;
+    object-fit: cover;
+  }
+  
+  .upgrade img {
+    max-width: 120px;
+  }
 }
 
 @media (max-width: 480px) {
@@ -688,7 +712,7 @@ footer {
     font-size: 1.75rem;
   }
   
-  /* CORRECTION: Mobile image optimization */
+  /* CORRECTION: Mobile image optimization for ALL images */
   .vehicle-detail-image {
     max-height: 300px;
     width: 100%;
@@ -699,6 +723,18 @@ footer {
   .vehicle-thumbnail {
     height: 150px;
     object-fit: cover;
+  }
+  
+  .hero-image img {
+    max-height: 250px;
+  }
+  
+  .cta img {
+    width: 140px;
+  }
+  
+  .upgrade img {
+    max-width: 100px;
   }
   
   .upgrades-grid {
@@ -722,16 +758,26 @@ footer {
   .vehicle-thumbnail {
     height: 120px;
   }
+  
+  .hero-image img {
+    max-height: 200px;
+  }
+  
+  .cta img {
+    width: 120px;
+  }
+  
+  .upgrade img {
+    max-width: 80px;
+  }
 }
 
-/* CORRECTION: Ensure all images are responsive */
-img {
-  max-width: 100%;
-  height: auto;
-}
-
+/* CORRECTION: Universal image styles for all pages */
 .vehicle-thumbnail,
-.vehicle-detail-image {
+.vehicle-detail-image,
+.hero-image img,
+.upgrade img,
+.cta img {
   background: #f8f9fa;
   border: 2px dashed #dee2e6;
 }
@@ -748,7 +794,7 @@ img {
   }
 }
 
-/* CORRECTION: Image container for better control */
+/* CORRECTION: Universal image container for better control */
 .image-container {
   width: 100%;
   display: flex;
