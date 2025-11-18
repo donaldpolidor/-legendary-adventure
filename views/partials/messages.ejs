@@ -1,0 +1,10 @@
+<!-- Messages flash -->
+<% if (typeof messages !== 'undefined' && messages) { %>
+  <div class="messages">
+    <% messages.forEach(function(message) { %>
+      <div class="message <%= message.type %>">
+        <%= message.text %>
+      </div>
+    <% }) %>
+  </div>
+<% } %>

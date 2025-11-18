@@ -171,6 +171,7 @@ main {
   box-shadow: 0 8px 20px rgba(0,0,0,0.15);
 }
 
+/* FIXED: Vehicle thumbnails with proper object-fit */
 .vehicle-thumbnail {
   width: 100%;
   height: 200px;
@@ -227,10 +228,11 @@ main {
   text-align: center;
 }
 
+/* FIXED: Vehicle detail image with proper object-fit */
 .vehicle-detail-image {
   width: 100%;
-  max-width: 600px;
-  height: auto;
+  height: 400px;
+  object-fit: cover;
   border-radius: 12px;
   box-shadow: 0 8px 24px rgba(0,0,0,0.15);
   background: #f8f9fa;
@@ -705,5 +707,159 @@ footer {
   
   nav, .cta, .upgrades, .reviews {
     display: none;
+  }
+}
+
+/* ===== ENHANCED VEHICLE DETAIL STYLES ===== */
+
+/* Certification Banner */
+.certification-banner {
+  background: #0066cc;
+  color: white;
+  padding: 0.75rem;
+  text-align: center;
+  border-radius: 6px;
+  margin-bottom: 1.5rem;
+}
+
+.certification-text {
+  margin: 0;
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+/* Price Section */
+.price-section {
+  text-align: center;
+  margin: 1.5rem 0;
+  padding: 1.5rem;
+  background: var(--card-bg);
+  border-radius: 8px;
+  border: 1px solid var(--border);
+}
+
+.no-haggle {
+  font-size: 0.9rem;
+  color: var(--muted);
+  margin-bottom: 0.5rem;
+}
+
+/* ENHANCED: Action Buttons with better styling */
+.action-buttons {
+  display: flex;
+  gap: 1rem;
+  margin: 1.5rem 0;
+  flex-wrap: wrap;
+}
+
+.btn-estimate, .btn-purchase, .btn-secondary {
+  padding: 1rem 1.5rem;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  flex: 1;
+  min-width: 200px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.btn-purchase {
+  background: linear-gradient(135deg, var(--accent), #0044cc);
+  color: white;
+}
+
+.btn-estimate {
+  background: linear-gradient(135deg, #6c757d, #5a6268);
+  color: white;
+}
+
+.btn-secondary {
+  background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+  color: var(--text);
+  border: 2px solid #dee2e6;
+}
+
+.btn-purchase:hover {
+  background: linear-gradient(135deg, #0056b3, #003d82);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+}
+
+.btn-estimate:hover {
+  background: linear-gradient(135deg, #5a6268, #495057);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+}
+
+.btn-secondary:hover {
+  background: linear-gradient(135deg, #e9ecef, #dee2e6);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+}
+
+/* Detailed Specs */
+.vehicle-specs-detailed {
+  margin: 2rem 0;
+}
+
+.specs-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1rem;
+  background: var(--card-bg);
+  padding: 1.5rem;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+}
+
+.secondary-actions {
+  display: flex;
+  gap: 1rem;
+  margin: 1.5rem 0;
+  flex-wrap: wrap;
+}
+
+/* Contact Section */
+.contact-section {
+  margin: 2rem 0;
+  padding: 1.5rem;
+  background: var(--card-bg);
+  border-radius: 8px;
+  border: 1px solid var(--border);
+}
+
+.contact-section h3 {
+  margin-bottom: 1rem;
+  color: var(--text);
+}
+
+.contact-info p {
+  margin: 0.5rem 0;
+}
+
+.prior-use {
+  font-style: italic;
+  color: var(--muted);
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--border);
+}
+
+/* Responsive Design for Enhanced Styles */
+@media (max-width: 768px) {
+  .action-buttons, .secondary-actions {
+    flex-direction: column;
+  }
+  
+  .btn-estimate, .btn-purchase, .btn-secondary {
+    width: 100%;
+  }
+  
+  .specs-grid {
+    grid-template-columns: 1fr;
   }
 }

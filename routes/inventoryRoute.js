@@ -11,7 +11,8 @@ router.get("/type/:classificationId", utilities.handleErrors(invController.build
  * Route to build vehicle detail view
  * Assignment 3, Task 1
  **************************************** */
-router.get("/detail/:invId", utilities.handleErrors(invController.buildDetail))
+// CORRECTION: Changer :invId en :id pour correspondre au contrôleur
+router.get("/detail/:id", utilities.handleErrors(invController.buildDetail))
 
 /* ****************************************
  * Error Route
