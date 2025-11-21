@@ -1,0 +1,54 @@
+<!-- flash-messages.ejs - Flash Messages Partial -->
+<% if (typeof messages !== 'undefined' && messages) { %>
+<div class="flash-messages">
+    <% if (messages.info) { %>
+    <div class="alert alert-info">
+        <ul>
+            <% messages.info.forEach(function(message) { %>
+            <li><%= message %></li>
+            <% }) %>
+        </ul>
+    </div>
+    <% } %>
+    
+    <% if (messages.success) { %>
+    <div class="alert alert-success">
+        <ul>
+            <% messages.success.forEach(function(message) { %>
+            <li><%= message %></li>
+            <% }) %>
+        </ul>
+    </div>
+    <% } %>
+    
+    <% if (messages.warning) { %>
+    <div class="alert alert-warning">
+        <ul>
+            <% messages.warning.forEach(function(message) { %>
+            <li><%= message %></li>
+            <% }) %>
+        </ul>
+    </div>
+    <% } %>
+    
+    <% if (messages.error) { %>
+    <div class="alert alert-danger">
+        <ul>
+            <% messages.error.forEach(function(message) { %>
+            <li><%= message %></li>
+            <% }) %>
+        </ul>
+    </div>
+    <% } %>
+
+    <% if (messages.notice) { %>
+    <div class="alert alert-notice">
+        <ul>
+            <% messages.notice.forEach(function(message) { %>
+            <li><%= message %></li>
+            <% }) %>
+        </ul>
+    </div>
+    <% } %>
+</div>
+<% } %>

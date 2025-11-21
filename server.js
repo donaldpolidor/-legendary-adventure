@@ -9,13 +9,15 @@ const express = require("express")
 const expressLayouts = require("express-ejs-layouts")
 const env = require("dotenv").config()
 const app = express()
-const staticRoutes = require("./routes/static") // Renommé pour éviter conflit
+const staticRoutes = require("./routes/static")
 const baseController = require("./controllers/baseController")
 const inventoryRoute = require("./routes/inventoryRoute")
+const accountRoute = require("./routes/accountRoute") 
 const utilities = require('./utilities/index')
 const session = require("express-session")
 const pool = require('./database/')
 const PostgreSqlStore = require('connect-pg-simple')(session)
+const bodyParser = require("body-parser")
 
 /* ***********************
  * View Engine And Templates
@@ -27,10 +29,14 @@ app.set("layout", "./layouts/layout")
 /* ***********************
  * Middleware
  * ************************/
-// SERVIR LES FICHIERS STATIQUES - DOIT ÊTRE EN PREMIER
+// SERVE STATIC FILES - MUST BE FIRST
 app.use(express.static("public"))
 
-// Configuration des sessions
+// Body Parser Middleware
+app.use(bodyParser.json())
+app.use(bodyParser.urlencoded({ extended: true })) // for parsing application/x-www-form-urlencoded
+
+// Session Configuration
 app.use(session({
   store: new PostgreSqlStore({
     createTableIfMissing: true,
@@ -56,13 +62,16 @@ app.use(function(req, res, next){
 /* ***********************
  * Routes
  *************************/
-app.use(staticRoutes) // Utilise le nom corrigé
+app.use(staticRoutes)
 
-// Index Route - UNIQUEMENT ICI
+// Index Route - ONLY HERE
 app.get("/", utilities.handleErrors(baseController.buildHome))
 
 // Inventory routes
 app.use("/inv", inventoryRoute)
+
+// Account routes - Activate account routing
+app.use("/account", accountRoute)
 
 // File Not Found Route - must be last route in list
 app.use(async (req, res, next) => {
