@@ -42,11 +42,11 @@ Util.getFallbackNav = function () {
   return `
     <ul class="main-nav">
       <li><a href="/" title="Home page">Home</a></li>
-      <li><a href="/inv/type/1" title="Custom Vehicles">Custom</a></li>
-      <li><a href="/inv/type/2" title="Sedan Vehicles">Sedan</a></li>
-      <li><a href="/inv/type/3" title="Sport Vehicles">Sport</a></li>
-      <li><a href="/inv/type/4" title="SUV Vehicles">SUV</a></li>
-      <li><a href="/inv/type/5" title="Truck Vehicles">Truck</a></li>
+      <li><a href="/inv/type/1" title="Sedan Vehicles">Sedan</a></li>
+      <li><a href="/inv/type/2" title="Sport Vehicles">Sport</a></li>
+      <li><a href="/inv/type/3" title="SUV Vehicles">SUV</a></li>
+      <li><a href="/inv/type/4" title="Truck Vehicles">Truck</a></li>
+      <li><a href="/inv/type/5" title="Custom Vehicles">Custom</a></li>
     </ul>
   `
 }
@@ -235,6 +235,29 @@ Util.buildSingleVehicleDisplay = async function(vehicle) {
  **************************************** */
 Util.handleErrors = fn => (req, res, next) => {
   return Promise.resolve(fn(req, res, next)).catch(next)
+}
+
+/* ****************************************
+ * Build classification list HTML
+ * *************************************** */
+Util.buildClassificationList = async function (classification_id = null) {
+  try {
+    let data = await invModel.getClassifications()
+    let classificationList = '<select name="classification_id" id="classificationList" class="form-control" required>'
+    classificationList += "<option value=''>Choose a Classification</option>"
+    data.forEach((row) => {
+      classificationList += '<option value="' + row.classification_id + '"'
+      if (classification_id != null && row.classification_id == classification_id) {
+        classificationList += " selected "
+      }
+      classificationList += ">" + row.classification_name + "</option>"
+    })
+    classificationList += "</select>"
+    return classificationList
+  } catch (error) {
+    console.error("buildClassificationList error:", error)
+    return '<select name="classification_id" id="classificationList" class="form-control" required><option value="">Error loading classifications</option></select>'
+  }
 }
 
 module.exports = Util
