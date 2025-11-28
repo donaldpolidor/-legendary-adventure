@@ -17,6 +17,23 @@ const regValidate = require('../utilities/account-validation');
 router.get("/login", utilities.handleErrors(accountController.buildLogin));
 
 /**
+ * POST route for processing login
+ * Path: /login (full path will be /account/login)
+ */
+router.post(
+  "/login",
+  regValidate.loginRules(),
+  regValidate.checkLoginData,
+  utilities.handleErrors(accountController.accountLogin)
+);
+
+/**
+ * GET route for account management page
+ * Path: / (full path will be /account/)
+ */
+router.get("/", utilities.handleErrors(accountController.buildAccountManagement));
+
+/**
  * GET route for registration page
  * Path: /registration (full path will be /account/registration)
  */

@@ -1,46 +1,35 @@
-/* ******************************************
- * Account Validation
- * Middleware for cleaning and validating account data
- *******************************************/
+const utilities = require("../utilities/")
+const { body, validationResult } = require("express-validator")
 
-const utilities = require("../utilities/");
-const { body, validationResult } = require("express-validator");
-const validate = {};
+/* *******************************
+ * Registration Validation Rules
+ ******************************* */
+const regValidate = {}
 
-/* **********************************
- * Registration Data Validation Rules
- * ********************************* */
-validate.registrationRules = () => {
+regValidate.registrationRules = () => {
   return [
     // firstname is required and must be string
     body("account_firstname")
       .trim()
-      .escape()
-      .notEmpty()
       .isLength({ min: 1 })
-      .withMessage("Please provide a first name."), // on error this message is sent.
+      .withMessage("Please provide a first name."), 
 
     // lastname is required and must be string
     body("account_lastname")
       .trim()
-      .escape()
-      .notEmpty()
       .isLength({ min: 2 })
-      .withMessage("Please provide a last name."), // on error this message is sent.
+      .withMessage("Please provide a last name."), 
 
     // valid email is required and cannot already exist in the DB
     body("account_email")
       .trim()
-      .escape()
-      .notEmpty()
       .isEmail()
-      .normalizeEmail() // refer to validator.js docs
-      .withMessage("A valid email is required."),
+      .normalizeEmail()
+      .withMessage("A valid email is required."), 
 
     // password is required and must be strong password
     body("account_password")
       .trim()
-      .notEmpty()
       .isStrongPassword({
         minLength: 12,
         minLowercase: 1,
@@ -49,30 +38,75 @@ validate.registrationRules = () => {
         minSymbols: 1,
       })
       .withMessage("Password does not meet requirements."),
-  ];
-};
+  ]
+}
 
-/* ******************************
- * Check data and return errors or continue to registration
- * ***************************** */
-validate.checkRegData = async (req, res, next) => {
-  const { account_firstname, account_lastname, account_email } = req.body;
-  let errors = [];
-  errors = validationResult(req);
+/* *******************************
+ * Check data against rules
+ ******************************* */
+regValidate.checkRegData = async (req, res, next) => {
+  const { account_firstname, account_lastname, account_email } = req.body
+  let errors = []
+  
+  errors = validationResult(req)
+  
   if (!errors.isEmpty()) {
-    let nav = await utilities.getNav();
+    let nav = await utilities.getNav()
     res.render("account/registration", {
-      errors,
       title: "Registration",
       nav,
+      errors: errors.array(),
       account_firstname,
       account_lastname,
       account_email,
-    });
-    return;
+    })
+    return
   }
-  next();
-};
+  
+  next()
+}
 
-// Export the validate object
-module.exports = validate;
+/* *******************************
+ * Login Validation Rules
+ ******************************* */
+regValidate.loginRules = () => {
+  return [
+    // email is required and must be valid email
+    body("account_email")
+      .trim()
+      .isEmail()
+      .normalizeEmail()
+      .withMessage("A valid email is required."),
+
+    // password is required
+    body("account_password")
+      .trim()
+      .notEmpty()
+      .withMessage("Please provide a password.")
+  ]
+}
+
+/* *******************************
+ * Check login data against rules
+ ******************************* */
+regValidate.checkLoginData = async (req, res, next) => {
+  const { account_email } = req.body
+  let errors = []
+  
+  errors = validationResult(req)
+  
+  if (!errors.isEmpty()) {
+    let nav = await utilities.getNav()
+    res.render("account/login", {
+      title: "Login",
+      nav,
+      errors: errors.array(),
+      account_email,
+    })
+    return
+  }
+  
+  next()
+}
+
+module.exports = regValidate

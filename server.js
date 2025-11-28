@@ -18,6 +18,7 @@ const session = require("express-session")
 const pool = require('./database/')
 const PostgreSqlStore = require('connect-pg-simple')(session)
 const bodyParser = require("body-parser")
+const cookieParser = require("cookie-parser")
 
 /* ***********************
  * View Engine And Templates
@@ -35,6 +36,9 @@ app.use(express.static("public"))
 // Body Parser Middleware
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true })) // for parsing application/x-www-form-urlencoded
+
+// Cookie Parser Middleware
+app.use(cookieParser())
 
 // Session Configuration
 app.use(session({
@@ -59,12 +63,15 @@ app.use(function(req, res, next){
   next()
 })
 
+// JWT Token Check Middleware 
+app.use(utilities.checkJWTToken)
+
 /* ***********************
  * Routes
  *************************/
 app.use(staticRoutes)
 
-// Index Route - ONLY HERE
+// Index Route 
 app.get("/", utilities.handleErrors(baseController.buildHome))
 
 // Inventory routes

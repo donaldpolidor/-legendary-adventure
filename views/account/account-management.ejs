@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title %></title>
+    <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+    <%- include('../partials/header') %>
+    
+    <main class="container">
+        <h1><%= title %></h1>
+        
+        <!-- Flash Messages -->
+        <% if (typeof messages !== 'undefined' && messages) { %>
+        <div class="flash-messages">
+            <% Object.keys(messages).forEach(function(type) { %>
+                <div class="alert alert-<%= type %>">
+                    <ul>
+                        <% messages[type].forEach(function(message) { %>
+                        <li><%= message %></li>
+                        <% }) %>
+                    </ul>
+                </div>
+            <% }) %>
+        </div>
+        <% } %>
+
+        <!-- Display errors if any -->
+        <% if (errors && errors.length > 0) { %>
+            <div class="alert alert-danger">
+                <ul>
+                    <% errors.forEach(function(error) { %>
+                        <li><%= error.msg || error %></li>
+                    <% }) %>
+                </ul>
+            </div>
+        <% } %>
+
+        <!-- Account Management Content -->
+        <div class="account-management">
+            <div class="alert alert-success">
+                <h2>Welcome! You are logged in.</h2>
+                <p>This is your account management page where you can view and update your account information.</p>
+            </div>
+            
+            <!-- Future content can be added here -->
+            <div class="account-actions">
+                <h3>Account Actions</h3>
+                <ul>
+                    <li>Update Profile Information</li>
+                    <li>Change Password</li>
+                    <li>View Order History</li>
+                    <li>Manage Preferences</li>
+                </ul>
+            </div>
+        </div>
+    </main>
+
+    <%- include('../partials/footer') %>
+</body>
+</html>
