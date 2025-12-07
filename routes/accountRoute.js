@@ -31,7 +31,10 @@ router.post(
  * GET route for account management page
  * Path: / (full path will be /account/)
  */
-router.get("/", utilities.handleErrors(accountController.buildAccountManagement));
+router.get("/", 
+  utilities.checkLogin, 
+  utilities.handleErrors(accountController.buildAccountManagement)
+);
 
 /**
  * GET route for registration page

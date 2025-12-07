@@ -1464,3 +1464,420 @@ textarea.form-control {
     content: "⚠️ ";
     margin-right: 0.5rem;
 }
+
+/* management.css */
+.management-main {
+    padding: 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.management-container {
+    background-color: white;
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+.management-links {
+    margin: 20px 0;
+    display: flex;
+    gap: 15px;
+}
+
+.management-links .btn {
+    padding: 10px 20px;
+    text-decoration: none;
+    border-radius: 4px;
+}
+
+.inventory-management-section {
+    margin-top: 30px;
+    padding-top: 20px;
+    border-top: 2px solid #eee;
+}
+
+.classification-select-container {
+    margin: 20px 0;
+}
+
+.classification-select-container select {
+    width: 100%;
+    max-width: 400px;
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+.inventory-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    display: none; /* Hidden by default, shown when data loaded */
+}
+
+.inventory-table.visible {
+    display: table;
+}
+
+.noscript-warning {
+    background-color: #fff3cd;
+    border: 1px solid #ffeaa7;
+    color: #856404;
+    padding: 15px;
+    border-radius: 4px;
+    margin-top: 20px;
+}
+
+
+/* management inventory.css */
+body {
+    font-family: Arial, sans-serif;
+    margin: 20px;
+}
+
+.management-links {
+    margin: 20px 0;
+}
+
+.management-links .btn {
+    display: inline-block;
+    padding: 10px 15px;
+    background-color: #007bff;
+    color: white;
+    text-decoration: none;
+    border-radius: 4px;
+    margin-right: 10px;
+}
+
+.inventory-management-section {
+    margin-top: 30px;
+}
+
+.classification-select-container select {
+    padding: 8px;
+    font-size: 16px;
+    width: 300px;
+}
+
+.inventory-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    display: none;
+}
+
+.inventory-table.visible {
+    display: table;
+}
+
+.inventory-table th {
+    background-color: #f0f0f0;
+    padding: 10px;
+    text-align: left;
+}
+
+.inventory-table td {
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+}
+
+.noscript-warning {
+    background-color: #fff3cd;
+    border: 1px solid #ffeaa7;
+    color: #856404;
+    padding: 15px;
+    margin-top: 20px;
+}
+
+/* Edit Inventory Page Styles */
+
+/* Form Container */
+.container.mt-4 {
+    background-color: #f8f9fa;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    margin-top: 20px !important;
+    margin-bottom: 40px;
+}
+
+/* Page Title */
+h1.mb-4 {
+    color: #2c3e50;
+    font-weight: 600;
+    border-bottom: 3px solid #007bff;
+    padding-bottom: 10px;
+    text-align: center;
+}
+
+/* Form Labels */
+.form-label {
+    font-weight: 600;
+    color: #495057;
+    margin-bottom: 8px;
+}
+
+/* Form Inputs */
+.form-control {
+    border: 1px solid #ced4da;
+    border-radius: 6px;
+    padding: 10px 12px;
+    transition: all 0.3s ease;
+}
+
+.form-control:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+    transform: translateY(-1px);
+}
+
+/* Input Groups */
+.input-group {
+    border-radius: 6px;
+    overflow: hidden;
+}
+
+.input-group-text {
+    background-color: #e9ecef;
+    border: 1px solid #ced4da;
+    color: #495057;
+    font-weight: 500;
+}
+
+/* Textarea */
+textarea.form-control {
+    min-height: 120px;
+    resize: vertical;
+}
+
+/* Form Text Helper */
+.form-text {
+    font-size: 0.85rem;
+    color: #6c757d;
+    margin-top: 5px;
+}
+
+/* Validation States */
+.was-validated .form-control:valid {
+    border-color: #28a745;
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8' viewBox='0 0 8 8'%3e%3cpath fill='%2328a745' d='M2.3 6.73L.6 4.53c-.4-1.04.46-1.4 1.1-.8l1.1 1.4 3.4-3.8c.6-.63 1.6-.27 1.2.7l-4 4.6c-.43.5-.8.4-1.1.1z'/%3e%3c/svg%3e");
+}
+
+.was-validated .form-control:invalid {
+    border-color: #dc3545;
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='none' stroke='%23dc3545' viewBox='0 0 12 12'%3e%3ccircle cx='6' cy='6' r='4.5'/%3e%3cpath stroke-linejoin='round' d='M5.8 3.6h.4L6 6.5z'/%3e%3ccircle cx='6' cy='8.2' r='.6' fill='%23dc3545' stroke='none'/%3e%3c/svg%3e");
+}
+
+.invalid-feedback {
+    font-size: 0.875rem;
+    color: #dc3545;
+    margin-top: 5px;
+}
+
+/* Buttons */
+.btn {
+    padding: 10px 24px;
+    font-weight: 600;
+    border-radius: 6px;
+    transition: all 0.3s ease;
+    border: none;
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
+    border: none;
+}
+
+.btn-primary:hover {
+    background: linear-gradient(135deg, #0056b3 0%, #004494 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 91, 187, 0.3);
+}
+
+.btn-secondary {
+    background: linear-gradient(135deg, #6c757d 0%, #545b62 100%);
+    border: none;
+}
+
+.btn-secondary:hover {
+    background: linear-gradient(135deg, #545b62 0%, #3d4348 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(108, 117, 125, 0.3);
+}
+
+/* Button Container */
+.d-flex.justify-content-between {
+    padding-top: 20px;
+    border-top: 1px solid #e9ecef;
+    margin-top: 30px;
+}
+
+/* Form Sections */
+.row.mb-3 {
+    margin-bottom: 20px !important;
+}
+
+/* Alert Styles */
+.alert {
+    border-radius: 8px;
+    border: none;
+    padding: 15px 20px;
+    margin-bottom: 25px;
+}
+
+.alert-danger {
+    background-color: #f8d7da;
+    color: #721c24;
+    border-left: 4px solid #dc3545;
+}
+
+.alert-success {
+    background-color: #d4edda;
+    color: #155724;
+    border-left: 4px solid #28a745;
+}
+
+/* Classification Select */
+select#classificationList {
+    cursor: pointer;
+    background-color: white;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23343a40' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M2 5l6 6 6-6'/%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    background-size: 16px 12px;
+    padding-right: 40px;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .container.mt-4 {
+        padding: 20px;
+        margin: 10px;
+    }
+    
+    .d-flex.justify-content-between {
+        flex-direction: column;
+        gap: 15px;
+    }
+    
+    .btn {
+        width: 100%;
+        margin-bottom: 10px;
+    }
+    
+    .row .col-md-6 {
+        margin-bottom: 15px;
+    }
+}
+
+/* Animation for form elements */
+.form-control, .btn, .alert {
+    animation: fadeIn 0.5s ease;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Focus states for accessibility */
+.form-control:focus, .btn:focus {
+    outline: 2px solid #007bff;
+    outline-offset: 2px;
+}
+
+/* Placeholder styling */
+::placeholder {
+    color: #adb5bd;
+    opacity: 1;
+}
+
+/* Custom scrollbar for textarea */
+textarea::-webkit-scrollbar {
+    width: 8px;
+}
+
+textarea::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 4px;
+}
+
+textarea::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 4px;
+}
+
+textarea::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+
+
+/* Loading state for submit button */
+.btn-primary:disabled {
+    background: linear-gradient(135deg, #6c757d 0%, #545b62 100%);
+    cursor: not-allowed;
+}
+
+.btn-primary.loading {
+    position: relative;
+    color: transparent;
+}
+
+.btn-primary.loading::after {
+    content: '';
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 20px;
+    height: 20px;
+    margin: -10px 0 0 -10px;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-top-color: white;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* Hover effects for form elements */
+.form-control:hover:not(:focus) {
+    border-color: #adb5bd;
+    box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.1);
+}
+
+/* Required field indicator */
+.form-label[for]:after {
+    content: " *";
+    color: #dc3545;
+}
+
+/* Form group spacing */
+.mb-3 {
+    margin-bottom: 1.5rem !important;
+}
+
+/* Card-like effect for form */
+.container.mt-4::before {
+    content: '';
+    position: absolute;
+    top: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 50px;
+    height: 5px;
+    background: linear-gradient(90deg, #007bff, #0056b3);
+    border-radius: 5px;
+}

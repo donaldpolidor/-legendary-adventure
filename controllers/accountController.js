@@ -110,12 +110,18 @@ async function accountLogin(req, res) {
  * Deliver account management view
  * *************************************** */
 async function buildAccountManagement(req, res, next) {
-  let nav = await utilities.getNav()
-  res.render("account/account-management", {
-    title: "Account Management",
-    nav,
-    errors: null,
-  })
+  try {
+    let nav = await utilities.getNav()
+    res.render("account/account-management", {
+      title: "Account Management",
+      nav,
+      errors: null,
+    })
+  } catch (error) {
+    console.error("Error in buildAccountManagement:", error)
+    req.flash("notice", "Error loading account management page")
+    res.redirect("/")
+  }
 }
 
 // Export the controller functions

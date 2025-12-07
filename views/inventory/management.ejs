@@ -1,25 +1,55 @@
-<link rel="stylesheet" href="/css/styles.css">
-<!-- management.ejs - Inventory Management View -->
-<div class="management-container">
-    <h1><%= title %></h1>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <%- include('../partials/head', {title}) %>
+    <link rel="stylesheet" href="/css/inventory.css">
+</head>
+<body>
+    <%- include('../partials/header') %>
     
-    <!-- Flash Messages -->
-    <%- include('../includes/flash-messages') %>
-
-    <div class="management-links">
-        <div class="management-card">
-            <h2>Classification Management</h2>
-            <p>Add new vehicle classifications to the system</p>
-            <a href="/inv/add-classification" class="btn btn-primary">Add New Classification</a>
+    <main class="management-main">
+        <div class="management-container">
+            <h1><%= title %></h1>
+            
+            <!-- ADD: Navigation links for management -->
+            <div class="management-links">
+                <a href="/inv/add-classification" class="btn btn-primary">Add New Classification</a>
+                <a href="/inv/add-inventory" class="btn btn-primary">Add New Vehicle</a>
+            </div>
+            
+            <!-- ADD: Manage Inventory section -->
+            <div class="inventory-management-section">
+                <h2>Manage Inventory</h2>
+                
+                <!-- ADD: Instruction paragraph -->
+                <p>Select a classification from the list below to view the inventory items belonging to that classification.</p>
+                
+                <!-- ADD: EJS block to display classification list -->
+                <div class="classification-select-container">
+                    <%- classificationSelect %>
+                </div>
+                
+                <!-- ADD: Empty HTML table for inventory display -->
+                <table id="inventoryDisplay" class="inventory-table">
+                    <!-- Table content will be injected by JavaScript -->
+                </table>
+                
+                <!-- ADD: noscript element for non-JavaScript browsers -->
+                <noscript>
+                    <div class="noscript-warning">
+                        <p>JavaScript must be enabled to use this page.</p>
+                    </div>
+                </noscript>
+            </div>
         </div>
-
-        <div class="management-card">
-            <h2>Inventory Management</h2>
-            <p>Add new vehicles to the inventory</p>
-            <a href="/inv/add-inventory" class="btn btn-primary">Add New Inventory</a>
-        </div>
-    </div>
-</div>
-
-<!-- Add JS link -->
-<script src="public/js/management.js"></script>
+    </main>
+    
+    <%- include('../partials/footer') %>
+    
+    <!-- ADD: JavaScript file for inventory management -->
+    <script src="/js/inventory-management.js" defer></script>
+    
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
