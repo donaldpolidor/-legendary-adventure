@@ -1,8 +1,26 @@
-<header id="top-header">
-  <span class="siteName">
-    <a href="/" title="Return to home page">CSE Motors</a>
-  </span>
-  <div id="tools">
-    <a title="Click to log in" href="/account/login">My Account</a>
-  </div>
+<header>
+    <div class="container py-2">
+        <div class="d-flex justify-content-between align-items-center">
+            <!-- Logo on the left -->
+            <a href="/">
+                <img src="/images/site/icon.png" alt="CSE Motors Logo" height="40">
+            </a>
+            
+            <!-- Navigation will be inserted here -->
+            <div id="navbarMain" class="flex-grow-1 mx-4"></div>
+            
+            <!-- User section - ONLY "My Account" on the RIGHT -->
+            <div class="text-end">
+                <% if (locals.loggedin && locals.accountData) { %>
+                    <!-- Logged in: name + My Account + Logout -->
+                    <span class="me-3"><%= locals.accountData.account_firstname %></span>
+                    <a href="/account/" class="me-3 text-dark text-decoration-none">My Account</a>
+                    <a href="/account/logout" class="text-dark text-decoration-none">Logout</a>
+                <% } else { %>
+                    <!-- Logged out: ONLY "My Account" -->
+                    <a href="/account/login" class="text-dark text-decoration-none">My Account</a>
+                <% } %>
+            </div>
+        </div>
+    </div>
 </header>

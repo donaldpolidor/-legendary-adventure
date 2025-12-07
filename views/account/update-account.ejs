@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title %></title>
+    <link rel="stylesheet" href="/css/styles.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <%- include('../partials/header') %>
+    
+    <main class="container mt-4">
+        <h1 class="mb-4"><%= title %></h1>
+        
+        <!-- Flash Messages -->
+        <% if (typeof messages !== 'undefined' && messages) { %>
+        <div class="flash-messages mb-4">
+            <% Object.keys(messages).forEach(function(type) { %>
+                <div class="alert alert-<%= type %>">
+                    <ul class="mb-0">
+                        <% messages[type].forEach(function(message) { %>
+                        <li><%= message %></li>
+                        <% }) %>
+                    </ul>
+                </div>
+            <% }) %>
+        </div>
+        <% } %>
+        
+        <!-- Display errors if any -->
+        <% if (errors && errors.length > 0) { %>
+            <div class="alert alert-danger mb-4">
+                <ul class="mb-0">
+                    <% errors.forEach(function(error) { %>
+                        <li><%= error.msg || error %></li>
+                    <% }) %>
+                </ul>
+            </div>
+        <% } %>
+        
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                
+                <!-- Form 1: Update Account Information -->
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h2 class="h4 mb-0">Update Account Information</h2>
+                    </div>
+                    <div class="card-body">
+                        <form action="/account/update" method="post" class="needs-validation" novalidate>
+                            <!-- Hidden field for account ID -->
+                            <input type="hidden" name="account_id" value="<%= accountData.account_id %>">
+                            
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="account_firstname" class="form-label">First Name *</label>
+                                    <input type="text" class="form-control" id="account_firstname" name="account_firstname" 
+                                           value="<%= accountData.account_firstname || '' %>" required>
+                                    <div class="invalid-feedback">
+                                        Please enter your first name.
+                                    </div>
+                                </div>
+                                
+                                <div class="col-md-6 mb-3">
+                                    <label for="account_lastname" class="form-label">Last Name *</label>
+                                    <input type="text" class="form-control" id="account_lastname" name="account_lastname" 
+                                           value="<%= accountData.account_lastname || '' %>" required>
+                                    <div class="invalid-feedback">
+                                        Please enter your last name.
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="account_email" class="form-label">Email Address *</label>
+                                <input type="email" class="form-control" id="account_email" name="account_email" 
+                                       value="<%= accountData.account_email || '' %>" required>
+                                <div class="invalid-feedback">
+                                    Please enter a valid email address.
+                                </div>
+                            </div>
+                            
+                            <div class="d-flex justify-content-between mt-4">
+                                <a href="/account/" class="btn btn-secondary">Cancel</a>
+                                <button type="submit" class="btn btn-primary">Update Account</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                
+                <!-- Form 2: Change Password -->
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="h4 mb-0">Change Password</h2>
+                    </div>
+                    <div class="card-body">
+                        <form action="/account/update-password" method="post" class="needs-validation" novalidate>
+                            <!-- Hidden field for account ID -->
+                            <input type="hidden" name="account_id" value="<%= accountData.account_id %>">
+                            
+                            <div class="mb-3">
+                                <label for="current_password" class="form-label">Current Password</label>
+                                <input type="password" class="form-control" id="current_password" name="current_password">
+                                <div class="form-text">
+                                    Enter your current password to verify your identity.
+                                </div>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="new_password" class="form-label">New Password</label>
+                                <input type="password" class="form-control" id="new_password" name="new_password" 
+                                       minlength="12">
+                                <div class="form-text">
+                                    Minimum 12 characters with uppercase, lowercase, number, and special character.
+                                </div>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="confirm_password" class="form-label">Confirm New Password</label>
+                                <input type="password" class="form-control" id="confirm_password" name="confirm_password" 
+                                       minlength="12">
+                            </div>
+                            
+                            <div class="d-flex justify-content-between mt-4">
+                                <button type="reset" class="btn btn-outline-secondary">Clear</button>
+                                <button type="submit" class="btn btn-warning">Change Password</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                
+                <!-- Back link -->
+                <div class="text-center mt-4">
+                    <a href="/account/" class="btn btn-link">Back to Account Management</a>
+                </div>
+                
+            </div>
+        </div>
+    </main>
+    
+    <%- include('../partials/footer') %>
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+    (function () {
+        'use strict'
+        
+        const forms = document.querySelectorAll('.needs-validation')
+        
+        Array.from(forms).forEach(form => {
+            form.addEventListener('submit', event => {
+                if (!form.checkValidity()) {
+                    event.preventDefault()
+                    event.stopPropagation()
+                }
+                
+                form.classList.add('was-validated')
+            }, false)
+        })
+    })()
+    </script>
+</body>
+</html>
