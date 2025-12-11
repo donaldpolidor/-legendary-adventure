@@ -9,7 +9,7 @@ const router = express.Router();
 const utilities = require("../utilities/");
 const accountController = require("../controllers/accountController");
 const regValidate = require('../utilities/account-validation');
-const accountValidate = require('../utilities/account-update-validation'); // Nouveau fichier de validation
+const accountValidate = require('../utilities/account-update-validation'); 
 
 /**
  * GET route for login page
@@ -42,6 +42,12 @@ router.get("/",
  * Path: /registration (full path will be /account/registration)
  */
 router.get("/registration", utilities.handleErrors(accountController.buildRegistration));
+
+/**
+ * GET route for registration page (alternative path /register)
+ * AJOUTÉ: Pour supporter /account/register en GET
+ */
+router.get("/register", utilities.handleErrors(accountController.buildRegistration));
 
 /**
  * POST route for registering new account

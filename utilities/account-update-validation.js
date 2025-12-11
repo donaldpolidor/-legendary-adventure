@@ -1,62 +1,58 @@
-// account-update-validation.js
-const utilities = require(".")
-const { body, validationResult } = require("express-validator")
-const accountModel = require("../models/account-model")
+const utilities = require("./");
+const { body, validationResult } = require("express-validator");
 
-/* ****************************************
+/* ************************
  * Account Update Validation Rules
- **************************************** */
-const accountValidate = {}
-
-/* ****************************************
- * Validation Rules for Account Information Update
- **************************************** */
-accountValidate.accountUpdateRules = () => {
+ ************************** */
+const accountUpdateRules = () => {
   return [
-    // Firstname is required
+    // First Name
     body("account_firstname")
       .trim()
+      .notEmpty()
+      .withMessage("Please provide a first name")
       .isLength({ min: 1 })
-      .withMessage("Please provide a first name."),
-
-    // Lastname is required
+      .withMessage("First name must be at least 1 character long")
+      .matches(/^[A-Za-z]+$/)
+      .withMessage("First name must contain only letters"),
+    
+    // Last Name
     body("account_lastname")
       .trim()
+      .notEmpty()
+      .withMessage("Please provide a last name")
       .isLength({ min: 2 })
-      .withMessage("Please provide a last name."),
-
-    // Email is required and must be valid
+      .withMessage("Last name must be at least 2 characters long")
+      .matches(/^[A-Za-z]+$/)
+      .withMessage("Last name must contain only letters"),
+    
+    // Email
     body("account_email")
       .trim()
-      .isEmail()
-      .normalizeEmail()
-      .withMessage("A valid email is required.")
-      // Check if email already exists for another account
-      .custom(async (email, { req }) => {
-        const account = await accountModel.getAccountByEmail(email)
-        if (account && account.account_id !== parseInt(req.body.account_id)) {
-          throw new Error("Email already exists. Please use a different email.")
-        }
-        return true
-      })
-  ]
-}
-
-/* ****************************************
- * Validation Rules for Password Update
- **************************************** */
-accountValidate.passwordUpdateRules = () => {
-  return [
-    // Current password is required if changing password
-    body("current_password")
-      .if(body("new_password").notEmpty())
       .notEmpty()
-      .withMessage("Current password is required to change password."),
+      .withMessage("Please provide an email address")
+      .isEmail()
+      .withMessage("Please provide a valid email address")
+      .normalizeEmail()
+  ];
+};
 
-    // New password must meet requirements
-    body("new_password")
-      .if(body("new_password").notEmpty())
+/* ************************
+ * Password Update Validation Rules
+ ************************** */
+const passwordUpdateRules = () => {
+  return [
+    // Current Password
+    body("current_password")
       .trim()
+      .notEmpty()
+      .withMessage("Please provide your current password"),
+    
+    // New Password
+    body("new_password")
+      .trim()
+      .notEmpty()
+      .withMessage("Please provide a new password")
       .isStrongPassword({
         minLength: 12,
         minLowercase: 1,
@@ -64,106 +60,73 @@ accountValidate.passwordUpdateRules = () => {
         minNumbers: 1,
         minSymbols: 1,
       })
-      .withMessage("Password does not meet requirements."),
-
-    // Confirm password must match
+      .withMessage("Password must be at least 12 characters long and contain at least 1 uppercase letter, 1 lowercase letter, 1 number, and 1 special character"),
+    
+    // Confirm Password
     body("confirm_password")
+      .trim()
       .custom((value, { req }) => {
-        if (req.body.new_password && value !== req.body.new_password) {
-          throw new Error("Passwords do not match.")
+        if (value !== req.body.new_password) {
+          throw new Error("Passwords do not match");
         }
-        return true
+        return true;
       })
-  ]
-}
+  ];
+};
 
-/* ****************************************
+/* ************************
  * Check Account Update Data
- * Returns errors to update-account view
- **************************************** */
-accountValidate.checkAccountUpdateData = async (req, res, next) => {
-  const { 
-    account_id,
-    account_firstname, 
-    account_lastname, 
-    account_email 
-  } = req.body
-  
-  let errors = validationResult(req)
+ ************************** */
+const checkAccountUpdateData = async (req, res, next) => {
+  const errors = validationResult(req);
   
   if (!errors.isEmpty()) {
-    let nav = await utilities.getNav()
+    let nav = await utilities.getNav();
+    const account_id = req.body.account_id || req.params.account_id;
     
-    // Get account data for repopulating the form
-    const accountData = await accountModel.getAccountById(account_id)
+    // Get account data from database
+    const accountModel = require("../models/account-model");
+    const accountData = await accountModel.getAccountById(account_id);
     
     res.render("account/update-account", {
       title: "Update Account",
       nav,
-      accountData: {
-        ...accountData,
-        account_firstname,
-        account_lastname,
-        account_email
-      },
-      errors: errors.array()
-    })
-    return
+      errors: errors.array(),
+      accountData
+    });
+    return;
   }
-  
-  next()
-}
+  next();
+};
 
-/* ****************************************
+/* ************************
  * Check Password Update Data
- * Returns errors to update-account view
- **************************************** */
-accountValidate.checkPasswordUpdateData = async (req, res, next) => {
-  const { 
-    account_id,
-    current_password,
-    new_password
-  } = req.body
-  
-  let errors = validationResult(req)
+ ************************** */
+const checkPasswordUpdateData = async (req, res, next) => {
+  const errors = validationResult(req);
   
   if (!errors.isEmpty()) {
-    let nav = await utilities.getNav()
+    let nav = await utilities.getNav();
+    const account_id = req.body.account_id;
     
-    // Get account data for repopulating the form
-    const accountData = await accountModel.getAccountById(account_id)
+    // Get account data from database
+    const accountModel = require("../models/account-model");
+    const accountData = await accountModel.getAccountById(account_id);
     
     res.render("account/update-account", {
       title: "Update Account",
       nav,
-      accountData,
-      errors: errors.array()
-    })
-    return
+      errors: errors.array(),
+      accountData
+    });
+    return;
   }
-  
-  // Additional validation: verify current password
-  if (new_password) {
-    const accountData = await accountModel.getAccountById(account_id)
-    const isPasswordValid = await require("bcryptjs").compare(
-      current_password, 
-      accountData.account_password
-    )
-    
-    if (!isPasswordValid) {
-      let nav = await utilities.getNav()
-      
-      res.render("account/update-account", {
-        title: "Update Account",
-        nav,
-        accountData,
-        errors: [{ msg: "Current password is incorrect." }]
-      })
-      return
-    }
-  }
-  
-  next()
-}
+  next();
+};
 
-module.exports = accountValidate
+module.exports = {
+  accountUpdateRules,
+  passwordUpdateRules,
+  checkAccountUpdateData,
+  checkPasswordUpdateData
+};

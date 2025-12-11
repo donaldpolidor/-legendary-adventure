@@ -1,39 +1,23 @@
-<!-- login.ejs - Login View -->
-<div class="login-container">
-    <h1><%= title %></h1>
-    
-    <!-- Flash Messages -->
-<% if (typeof messages !== 'undefined' && messages) { %>
-<div class="flash-messages">
-    <% Object.keys(messages).forEach(function(type) { %>
-        <div class="alert alert-<%= type %>">
-            <ul>
-                <% messages[type].forEach(function(message) { %>
-                <li><%= message %></li>
-                <% }) %>
-            </ul>
-        </div>
-    <% }) %>
+<% if (title) { %>
+<h1><%= title %></h1>
+<% } else {
+  res.redirect('/')
+} %>
+
+<%- messages() %>
+
+<div id="loginContainer">
+  <form id="loginForm" action="/account/login" method="post">
+    <fieldset>
+      <label for="email">Email Address:</label>
+      <input type="email" name="account_email" id="email" required value="<%= locals.account_email %>">
+      <label for="password">Password</label>
+      <input type="password" name="account_password" id="password" required pattern="^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z0-9])(?!.*\s).{12,}$">
+      <div><i>Passwords must be minimum of 12 characters and include 1 capital letter, 1 number and 1 special character.</i></div>
+      <div id="pswdBtn">Show Password</div>
+      <button type="submit">Login</button>
+    </fieldset>
+  </form>
+  <p>No account? <a href="/account/register">Sign-up</a></p>
 </div>
-<% } %>
-
-
-    <!-- Login Form -->
-    <form action="/account/login" method="POST" class="login-form">
-        <div class="form-group">
-            <label for="email">Email:</label>
-            <input type="email" id="email" name="email" required class="form-control">
-        </div>
-
-        <div class="form-group">
-            <label for="password">Password:</label>
-            <input type="password" id="password" name="password" required class="form-control">
-        </div>
-
-        <button type="submit" class="btn btn-primary">LOGIN</button>
-    </form>
-
-    <!-- Sign-up Link -->
-    <div class="signup-link">
-      <p>No account? <a href="/account/registration">Sign-up</a></p>    </div>
-</div>
+<script src="/js/script.js"></script>

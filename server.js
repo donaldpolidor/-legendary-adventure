@@ -66,6 +66,21 @@ app.use(function(req, res, next){
 // JWT Token Check Middleware 
 app.use(utilities.checkJWTToken)
 
+/* ****************************************
+ * ADD THIS CRITICAL MIDDLEWARE
+ * Add navigation data to all views
+ *****************************************/
+app.use(async (req, res, next) => {
+  try {
+    const nav = await utilities.getNav();
+    res.locals.nav = nav;
+  } catch (error) {
+    console.error("Navigation middleware error:", error);
+    res.locals.nav = '<ul><li><a href="/">Home</a></li></ul>';
+  }
+  next();
+});
+
 /* ***********************
  * Routes
  *************************/

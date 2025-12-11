@@ -11,16 +11,17 @@ Util.getNav = async function () {
   try {
     let data = await invModel.getClassifications()
     
-    // IMPROVED ERROR HANDLING
-    if (!data || !data.rows || !Array.isArray(data.rows)) {
-      console.error("Invalid data structure from database")
+    // CORRECTION : data est directement un array
+    if (!data || !Array.isArray(data)) {
+      console.error("Invalid data structure from database - expected array, got:", typeof data)
       return Util.getFallbackNav()
     }
     
     let list = "<ul class='main-nav'>"
     list += '<li><a href="/" title="Home page">Home</a></li>'
     
-    data.rows.forEach((row) => {
+    // CORRECTION : Utiliser data directement
+    data.forEach((row) => {
       list += "<li>"
       list += '<a href="/inv/type/' + row.classification_id + 
               '" title="See our inventory of ' + row.classification_name + 
@@ -92,7 +93,7 @@ Util.buildClassificationGrid = async function(data){
 }
 
 /* ****************************************
- * Build the vehicle detail HTML - CORRECTED VERSION WITH REAL COLORS
+ * Build the vehicle detail HTML
  **************************************** */
 Util.buildSingleVehicleDisplay = async function(vehicle) {
   try {
@@ -114,43 +115,26 @@ Util.buildSingleVehicleDisplay = async function(vehicle) {
     // Get correct color based on vehicle model
     const getVehicleColor = (make, model) => {
       const colorMap = {
-        // Batmobile Custom
         'Batmobile': 'Black',
-        // FBI Surveillance Van
         'FBI': 'Brown',
-        // Dog Car
         'Dog': 'White',
-        // Aerocar International Aerocar
         'Aerocar': 'Yellow & Green',
-        // Monster Truck
         'Monster': 'Blue',
-        // Mystery Machine
         'Mystery': 'Blue',
-        // Chevy Camaro
         'Camaro': 'Black',
-        // Lamborghini Adventador
         'Lamborghini': 'White',
-        // Jeep Wrangler
         'Jeep': 'Yellow',
-        // Cadillac Escalade
         'Cadillac': 'Black',
-        // Spartan Fire Truck
         'Spartan': 'Red',
-        // GM Hummer
         'Hummer': 'Silver',
-        // Mechanic Special
         'Mechanic': 'Rust',
-        // Ford Model T
         'Model T': 'Black',
-        // Ford Crown Victoria
         'Crown Victoria': 'White'
       }
 
-      // Check for specific models first, then fallback to make
       if (colorMap[model]) return colorMap[model]
       if (colorMap[make]) return colorMap[make]
       
-      // Fallback to database color or default
       return vehicle.inv_color || 'Not specified'
     }
 
@@ -172,23 +156,23 @@ Util.buildSingleVehicleDisplay = async function(vehicle) {
     
     svd += '<div class="vehicle-info-section">'
     
-    // Vehicle title with year, make and model
+    // Vehicle title
     svd += '<h1 class="vehicle-detail-title">' + vehicle.inv_year + ' ' + vehicle.inv_make + ' ' + vehicle.inv_model + '</h1>'
     
-    // Enhanced price section
+    // Price section
     svd += '<div class="price-section">'
     svd += '<div class="no-haggle">No-Haggle Price</div>'
     svd += '<div class="vehicle-price-large">' + formattedPrice + '</div>'
     svd += '<div class="vehicle-mileage">' + formattedMileage + ' miles</div>'
     svd += '</div>'
     
-    // Action buttons like in the example
+    // Action buttons
     svd += '<div class="action-buttons">'
     svd += '<button class="btn-estimate">ESTIMATE PAYMENTS</button>'
     svd += '<button class="btn-purchase">START MY PURCHASE</button>'
     svd += '</div>'
     
-    // Detailed specifications - USING CORRECT COLORS
+    // Detailed specifications
     svd += '<div class="vehicle-specs-detailed">'
     svd += '<div class="specs-grid">'
     svd += '<div class="spec-item"><span class="spec-label">Year:</span><span class="spec-value">' + vehicle.inv_year + '</span></div>'
@@ -245,6 +229,12 @@ Util.handleErrors = fn => (req, res, next) => {
 Util.buildClassificationList = async function (classification_id = null) {
   try {
     let data = await invModel.getClassifications()
+    
+    // CORRECTION : data est directement un array
+    if (!data || !Array.isArray(data)) {
+      return '<select name="classification_id" id="classificationList" class="form-control" required><option value="">Error loading classifications</option></select>'
+    }
+    
     let classificationList = '<select name="classification_id" id="classificationList" class="form-control" required>'
     classificationList += "<option value=''>Choose a Classification</option>"
     data.forEach((row) => {
@@ -294,6 +284,19 @@ Util.checkLogin = (req, res, next) => {
   } else {
     req.flash("notice", "Please log in.")
     return res.redirect("/account/login")
+  }
+}
+
+/* ****************************************
+ * Check account type for authorization
+ **************************************** */
+Util.checkAccountType = (requiredType) => {
+  return (req, res, next) => {
+    if (res.locals.accountData && res.locals.accountData.account_type === requiredType) {
+      return next()
+    }
+    req.flash("notice", "You don't have permission to access this page.")
+    res.redirect("/account/login")
   }
 }
 

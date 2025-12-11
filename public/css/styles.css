@@ -1981,3 +1981,432 @@ textarea::-webkit-scrollbar-thumb:hover {
     text-decoration: none;
     font-weight: 500;
 }
+
+
+/* ============================================
+   STYLES POUR LA PAGE DE CONNEXION (login.ejs)
+   ============================================ */
+
+/* Conteneur principal de la page de connexion */
+#loginContainer {
+    max-width: 500px;
+    margin: 2rem auto;
+    padding: 2rem;
+    background-color: #f8f9fa;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Titre de la page */
+#loginContainer h1 {
+    text-align: center;
+    color: #2c3e50;
+    margin-bottom: 1.5rem;
+    font-size: 2.2rem;
+    font-weight: 600;
+    border-bottom: 2px solid #3498db;
+    padding-bottom: 0.5rem;
+}
+
+/* Formulaire de connexion */
+#loginForm {
+    width: 100%;
+}
+
+/* Fieldset du formulaire */
+#loginForm fieldset {
+    border: none;
+    padding: 0;
+    margin: 0;
+}
+
+/* Labels des champs */
+#loginForm label {
+    display: block;
+    margin: 1rem 0 0.5rem;
+    color: #34495e;
+    font-weight: 600;
+    font-size: 1rem;
+}
+
+/* Champs de saisie */
+#loginForm input[type="email"],
+#loginForm input[type="password"] {
+    width: 100%;
+    padding: 0.8rem;
+    border: 2px solid #ddd;
+    border-radius: 5px;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    box-sizing: border-box;
+}
+
+#loginForm input[type="email"]:focus,
+#loginForm input[type="password"]:focus {
+    outline: none;
+    border-color: #3498db;
+    box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+}
+
+/* Message d'information pour le mot de passe */
+#loginForm div i {
+    display: block;
+    font-size: 0.85rem;
+    color: #7f8c8d;
+    margin: 0.5rem 0 1rem;
+    font-style: italic;
+    line-height: 1.4;
+    padding: 0.5rem;
+    background-color: #ecf0f1;
+    border-radius: 4px;
+    border-left: 3px solid #3498db;
+}
+
+/* Bouton pour afficher/masquer le mot de passe */
+#pswdBtn {
+    display: inline-block;
+    margin: 0.5rem 0 1.5rem;
+    padding: 0.5rem 1rem;
+    background-color: #95a5a6;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    text-align: center;
+    transition: background-color 0.3s ease;
+}
+
+#pswdBtn:hover {
+    background-color: #7f8c8d;
+}
+
+/* Bouton de soumission */
+#loginForm button[type="submit"] {
+    width: 100%;
+    padding: 1rem;
+    background-color: #3498db;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    margin-top: 0.5rem;
+}
+
+#loginForm button[type="submit"]:hover {
+    background-color: #2980b9;
+    transform: translateY(-2px);
+}
+
+#loginForm button[type="submit"]:active {
+    transform: translateY(0);
+}
+
+/* Lien d'inscription */
+#loginContainer p {
+    text-align: center;
+    margin-top: 1.5rem;
+    color: #7f8c8d;
+    font-size: 1rem;
+}
+
+#loginContainer a {
+    color: #3498db;
+    text-decoration: none;
+    font-weight: 600;
+    transition: color 0.3s ease;
+}
+
+#loginContainer a:hover {
+    color: #2980b9;
+    text-decoration: underline;
+}
+
+/* Styles pour les messages (erreurs/succès) */
+.alert {
+    padding: 1rem;
+    margin-bottom: 1.5rem;
+    border-radius: 5px;
+    font-weight: 500;
+}
+
+.alert-error {
+    background-color: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+}
+
+.alert-success {
+    background-color: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+}
+
+.alert-info {
+    background-color: #d1ecf1;
+    color: #0c5460;
+    border: 1px solid #bee5eb;
+}
+
+/* États de validation des champs */
+#loginForm input:valid {
+    border-color: #27ae60;
+}
+
+#loginForm input:invalid:not(:focus):not(:placeholder-shown) {
+    border-color: #e74c3c;
+}
+
+/* Style pour les appareils mobiles */
+@media (max-width: 768px) {
+    #loginContainer {
+        margin: 1rem;
+        padding: 1.5rem;
+    }
+    
+    #loginContainer h1 {
+        font-size: 1.8rem;
+    }
+    
+    #loginForm input[type="email"],
+    #loginForm input[type="password"] {
+        padding: 0.7rem;
+    }
+    
+    #loginForm button[type="submit"] {
+        padding: 0.8rem;
+    }
+}
+
+/* Animation pour le conteneur */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+#loginContainer {
+    animation: fadeIn 0.5s ease-out;
+}
+
+/* Style pour le focus accessible */
+#loginForm input:focus,
+#pswdBtn:focus,
+#loginForm button[type="submit"]:focus {
+    outline: 2px solid #3498db;
+    outline-offset: 2px;
+}
+
+/* Style pour les indicateurs de champ requis */
+#loginForm label:after {
+    content: " *";
+    color: #e74c3c;
+}
+
+/* Ajustement pour les champs pré-remplis */
+#loginForm input[type="email"][value]:not([value=""]) {
+    background-color: #f0f8ff;
+}
+
+
+/* Registration Page Styles */
+:root {
+  --primary-color: #2c3e50;
+  --secondary-color: #3498db;
+  --accent-color: #e74c3c;
+  --light-color: #ecf0f1;
+  --dark-color: #2c3e50;
+  --success-color: #27ae60;
+  --warning-color: #f39c12;
+  --danger-color: #e74c3c;
+  --border-radius: 8px;
+  --box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  --transition: all 0.3s ease;
+}
+
+/* Main container */
+.register-container {
+  max-width: 500px;
+  margin: 50px auto;
+  padding: 40px 30px;
+  background: white;
+  border-radius: var(--border-radius);
+  box-shadow: var(--box-shadow);
+  border-top: 4px solid var(--secondary-color);
+}
+
+/* Page title */
+.register-title {
+  color: var(--primary-color);
+  text-align: center;
+  margin-bottom: 30px;
+  font-weight: 600;
+  position: relative;
+  padding-bottom: 15px;
+}
+
+.register-title::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 80px;
+  height: 3px;
+  background: var(--secondary-color);
+}
+
+/* Form elements */
+.form-group {
+  margin-bottom: 25px;
+}
+
+.form-label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 500;
+  color: var(--dark-color);
+}
+
+.form-control {
+  width: 100%;
+  padding: 12px 15px;
+  border: 2px solid #ddd;
+  border-radius: var(--border-radius);
+  font-size: 16px;
+  transition: var(--transition);
+}
+
+.form-control:focus {
+  border-color: var(--secondary-color);
+  box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+  outline: none;
+}
+
+.form-control.error {
+  border-color: var(--danger-color);
+}
+
+/* Password strength indicator */
+.password-strength {
+  margin-top: 8px;
+  height: 4px;
+  background: #eee;
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.strength-bar {
+  height: 100%;
+  width: 0%;
+  transition: width 0.3s ease;
+}
+
+/* Submit button */
+.btn-submit {
+  width: 100%;
+  padding: 14px;
+  background: var(--secondary-color);
+  color: white;
+  border: none;
+  border-radius: var(--border-radius);
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.btn-submit:hover {
+  background: #2980b9;
+  transform: translateY(-2px);
+}
+
+.btn-submit:active {
+  transform: translateY(0);
+}
+
+/* Link styling */
+.register-link {
+  text-align: center;
+  margin-top: 20px;
+  color: #666;
+}
+
+.register-link a {
+  color: var(--secondary-color);
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.register-link a:hover {
+  text-decoration: underline;
+}
+
+/* Alert messages */
+.alert {
+  padding: 15px;
+  border-radius: var(--border-radius);
+  margin-bottom: 20px;
+}
+
+.alert-success {
+  background: #d4edda;
+  color: var(--success-color);
+  border: 1px solid #c3e6cb;
+}
+
+.alert-danger {
+  background: #f8d7da;
+  color: var(--danger-color);
+  border: 1px solid #f5c6cb;
+}
+
+/* Error messages */
+.error-message {
+  color: var(--danger-color);
+  font-size: 14px;
+  margin-top: 5px;
+  display: flex;
+  align-items: center;
+}
+
+.error-message::before {
+  content: "⚠ ";
+  margin-right: 5px;
+}
+
+/* Responsive design */
+@media (max-width: 576px) {
+  .register-container {
+    margin: 20px;
+    padding: 25px 20px;
+  }
+  
+  .register-title {
+    font-size: 24px;
+  }
+}
+
+/* Loading state */
+.btn-submit.loading {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+/* Form validation styles */
+.form-control.valid {
+  border-color: var(--success-color);
+}
+
+.form-control.invalid {
+  border-color: var(--danger-color);
+}

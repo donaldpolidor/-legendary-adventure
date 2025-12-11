@@ -1,179 +1,139 @@
-// inventory-validation.js
-const utilities = require(".")
-const { body, validationResult } = require("express-validator")
+const utilities = require("./");
+const { body, validationResult } = require("express-validator");
 
-/* ****************************************
+/* ************************
  * Inventory Validation Rules
- **************************************** */
-const invValidate = {}
-
-/* ****************************************
- * Validation Rules for Adding Inventory
- **************************************** */
-invValidate.inventoryRules = () => {
+ ************************** */
+const inventoryRules = () => {
   return [
-    // Classification is required
+    // Classification ID
     body("classification_id")
       .notEmpty()
-      .withMessage("Please select a classification."),
-
-    // Make is required
+      .withMessage("Please select a classification")
+      .isInt()
+      .withMessage("Classification must be a valid number"),
+    
+    // Make
     body("inv_make")
       .trim()
+      .notEmpty()
+      .withMessage("Please provide a vehicle make")
       .isLength({ min: 1 })
-      .withMessage("Please provide a make."),
-
-    // Model is required
+      .withMessage("Make must be at least 1 character long"),
+    
+    // Model
     body("inv_model")
       .trim()
+      .notEmpty()
+      .withMessage("Please provide a vehicle model")
       .isLength({ min: 1 })
-      .withMessage("Please provide a model."),
-
-    // Year is required and must be a valid year
+      .withMessage("Model must be at least 1 character long"),
+    
+    // Year
     body("inv_year")
       .trim()
-      .isNumeric()
-      .withMessage("Year must be a number.")
-      .isLength({ min: 4, max: 4 })
-      .withMessage("Please provide a valid 4-digit year.")
-      .custom((value) => {
-        const currentYear = new Date().getFullYear()
-        if (value < 1900 || value > currentYear + 1) {
-          throw new Error(`Year must be between 1900 and ${currentYear + 1}`)
-        }
-        return true
-      }),
-
-    // Description is required
+      .notEmpty()
+      .withMessage("Please provide a vehicle year")
+      .isInt({ min: 1900, max: new Date().getFullYear() + 1 })
+      .withMessage(`Year must be between 1900 and ${new Date().getFullYear() + 1}`),
+    
+    // Description
     body("inv_description")
       .trim()
-      .isLength({ min: 1 })
-      .withMessage("Please provide a description."),
-
-    // Price is required and must be a positive number
+      .notEmpty()
+      .withMessage("Please provide a vehicle description")
+      .isLength({ min: 10 })
+      .withMessage("Description must be at least 10 characters long"),
+    
+    // Price
     body("inv_price")
       .trim()
-      .isNumeric()
-      .withMessage("Price must be a number.")
-      .custom((value) => {
-        if (value <= 0) {
-          throw new Error("Price must be greater than 0.")
-        }
-        return true
-      }),
-
-    // Miles is required and must be a positive number
+      .notEmpty()
+      .withMessage("Please provide a vehicle price")
+      .isFloat({ min: 0 })
+      .withMessage("Price must be a positive number"),
+    
+    // Miles
     body("inv_miles")
       .trim()
-      .isNumeric()
-      .withMessage("Miles must be a number.")
-      .custom((value) => {
-        if (value < 0) {
-          throw new Error("Miles cannot be negative.")
-        }
-        return true
-      }),
-
-    // Color is required
+      .notEmpty()
+      .withMessage("Please provide vehicle mileage")
+      .isInt({ min: 0 })
+      .withMessage("Mileage must be a positive number"),
+    
+    // Color
     body("inv_color")
       .trim()
-      .isLength({ min: 1 })
-      .withMessage("Please provide a color.")
-  ]
-}
+      .notEmpty()
+      .withMessage("Please provide a vehicle color")
+      .isLength({ min: 3 })
+      .withMessage("Color must be at least 3 characters long"),
+    
+    // Image paths (optional but with validation)
+    body("inv_image")
+      .trim()
+      .optional({ checkFalsy: true })
+      .isLength({ max: 255 })
+      .withMessage("Image path is too long"),
+    
+    body("inv_thumbnail")
+      .trim()
+      .optional({ checkFalsy: true })
+      .isLength({ max: 255 })
+      .withMessage("Thumbnail path is too long")
+  ];
+};
 
-/* ****************************************
- * Check Inventory Data for Add
- * Returns errors to add-inventory view
- **************************************** */
-invValidate.checkInventoryData = async (req, res, next) => {
-  const { 
-    classification_id, 
-    inv_make, 
-    inv_model, 
-    inv_year,
-    inv_description, 
-    inv_price, 
-    inv_miles, 
-    inv_color,
-    inv_image,
-    inv_thumbnail
-  } = req.body
-  
-  let errors = validationResult(req)
+/* ************************
+ * Check Inventory Data
+ ************************** */
+const checkInventoryData = async (req, res, next) => {
+  const errors = validationResult(req);
   
   if (!errors.isEmpty()) {
-    let nav = await utilities.getNav()
-    let classificationList = await utilities.buildClassificationList(classification_id)
+    let nav = await utilities.getNav();
+    let classificationList = await utilities.buildClassificationList(req.body.classification_id);
     
     res.render("inventory/add-inventory", {
       title: "Add New Vehicle",
       nav,
       classificationList,
       errors: errors.array(),
-      classification_id,
-      inv_make,
-      inv_model,
-      inv_year,
-      inv_description,
-      inv_price,
-      inv_miles,
-      inv_color,
-      inv_image,
-      inv_thumbnail
-    })
-    return
+      // Data persistence
+      ...req.body
+    });
+    return;
   }
-  
-  next()
-}
+  next();
+};
 
-/* ****************************************
- * Check Update Data for Edit
- * Returns errors to edit-inventory view
- **************************************** */
-invValidate.checkUpdateData = async (req, res, next) => {
-  const { 
-    inv_id,
-    classification_id, 
-    inv_make, 
-    inv_model, 
-    inv_year,
-    inv_description, 
-    inv_price, 
-    inv_miles, 
-    inv_color,
-    inv_image,
-    inv_thumbnail
-  } = req.body
-  
-  let errors = validationResult(req)
+/* ************************
+ * Check Update Data (for editing)
+ ************************** */
+const checkUpdateData = async (req, res, next) => {
+  const errors = validationResult(req);
   
   if (!errors.isEmpty()) {
-    let nav = await utilities.getNav()
-    let classificationSelect = await utilities.buildClassificationList(classification_id)
+    let nav = await utilities.getNav();
+    let classificationList = await utilities.buildClassificationList(req.body.classification_id);
+    const { inv_id, inv_make, inv_model } = req.body;
+    const itemName = `${inv_make} ${inv_model}`;
     
     res.render("inventory/edit-inventory", {
-      title: "Edit Vehicle",
+      title: "Edit " + itemName,
       nav,
-      classificationSelect,
+      classificationSelect: classificationList,
       errors: errors.array(),
-      inv_id,
-      classification_id,
-      inv_make,
-      inv_model,
-      inv_year,
-      inv_description,
-      inv_price,
-      inv_miles,
-      inv_color,
-      inv_image,
-      inv_thumbnail
-    })
-    return
+      // Data persistence
+      ...req.body
+    });
+    return;
   }
-  
-  next()
-}
+  next();
+};
 
-module.exports = invValidate
+module.exports = {
+  inventoryRules,
+  checkInventoryData,
+  checkUpdateData
+};
