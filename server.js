@@ -13,11 +13,8 @@ const staticRoutes = require("./routes/static")
 const baseController = require("./controllers/baseController")
 const inventoryRoute = require("./routes/inventoryRoute")
 const accountRoute = require("./routes/accountRoute") 
-const utilities = require('./utilities/index')
+const utilities = require('./utilities/')
 const session = require("express-session")
-const pool = require('./database/')
-const PostgreSqlStore = require('connect-pg-simple')(session)
-const bodyParser = require("body-parser")
 const cookieParser = require("cookie-parser")
 
 /* ***********************
@@ -30,29 +27,28 @@ app.set("layout", "./layouts/layout")
 /* ***********************
  * Middleware
  * ************************/
-// SERVE STATIC FILES - MUST BE FIRST
+// SERVE STATIC FILES
 app.use(express.static("public"))
 
 // Body Parser Middleware
-app.use(bodyParser.json())
-app.use(bodyParser.urlencoded({ extended: true })) // for parsing application/x-www-form-urlencoded
+app.use(express.json())
+app.use(express.urlencoded({ extended: true }))
 
 // Cookie Parser Middleware
 app.use(cookieParser())
 
-// Session Configuration
+// SESSION CONFIGURATION - CORRECTION CRITIQUE
+// Utiliser MemoryStore temporairement pour éviter les erreurs DB
 app.use(session({
-  store: new PostgreSqlStore({
-    createTableIfMissing: true,
-    pool,
-  }),
+  store: new session.MemoryStore(), // TEMPORAIRE : MemoryStore au lieu de PostgreSQL
   secret: process.env.SESSION_SECRET || "fallback_secret_for_dev",
   resave: false,
   saveUninitialized: false,
   name: 'sessionId',
   cookie: {
-    maxAge: 1000 * 60 * 60 * 24,
-    secure: process.env.NODE_ENV === 'production'
+    maxAge: 1000 * 60 * 60 * 24, // 24 heures
+    secure: process.env.NODE_ENV === 'production',
+    sameSite: 'lax'
   }
 }))
 
@@ -67,17 +63,46 @@ app.use(function(req, res, next){
 app.use(utilities.checkJWTToken)
 
 /* ****************************************
- * ADD THIS CRITICAL MIDDLEWARE
- * Add navigation data to all views
+ * MIDDLEWARE DE NAVIGATION - OPTIMISÉ
+ * CORRECTION : Éviter les appels DB multiples
  *****************************************/
+let navigationCache = {
+  data: null,
+  timestamp: 0,
+  ttl: 60000 // 1 minute de cache
+};
+
 app.use(async (req, res, next) => {
   try {
-    const nav = await utilities.getNav();
-    res.locals.nav = nav;
+    const now = Date.now();
+    
+    // Utiliser le cache si disponible et récent
+    if (navigationCache.data && (now - navigationCache.timestamp) < navigationCache.ttl) {
+      res.locals.nav = navigationCache.data;
+      return next();
+    }
+    
+    // Sinon, charger la navigation AVEC GESTION D'ERREUR
+    try {
+      const nav = await utilities.getNav();
+      res.locals.nav = nav;
+      
+      // Mettre en cache
+      navigationCache.data = nav;
+      navigationCache.timestamp = now;
+      
+    } catch (navError) {
+      console.error("Navigation load failed, using fallback:", navError.message);
+      // Navigation de secours SIMPLE
+      res.locals.nav = '<ul class="main-nav"><li><a href="/">Home</a></li><li><a href="/inv/type/1">Sedan</a></li><li><a href="/inv/type/2">Sport</a></li><li><a href="/inv/type/3">SUV</a></li><li><a href="/inv/type/4">Truck</a></li><li><a href="/inv/type/5">Custom</a></li></ul>';
+    }
+    
   } catch (error) {
-    console.error("Navigation middleware error:", error);
+    console.error("Navigation middleware error:", error.message);
+    // Navigation de secours ULTIME
     res.locals.nav = '<ul><li><a href="/">Home</a></li></ul>';
   }
+  
   next();
 });
 
@@ -92,7 +117,7 @@ app.get("/", utilities.handleErrors(baseController.buildHome))
 // Inventory routes
 app.use("/inv", inventoryRoute)
 
-// Account routes - Activate account routing
+// Account routes
 app.use("/account", accountRoute)
 
 // File Not Found Route - must be last route in list
@@ -102,43 +127,48 @@ app.use(async (req, res, next) => {
 
 /* ***********************
 * Express Error Handler
-* Place after all other middleware
+* CORRECTION : Prévenir les réponses multiples
 *************************/
 app.use(async (err, req, res, next) => {
-  let nav;
-  try {
-    nav = await utilities.getNav();
-  } catch (navError) {
-    console.error("Navigation error:", navError);
-    nav = '<ul><li><a href="/">Home</a></li></ul>';
+  // VÉRIFICATION CRITIQUE : Si les headers ont déjà été envoyés, ne rien faire
+  if (res.headersSent) {
+    console.error('Headers already sent, cannot send error response');
+    return;
+  }
+  
+  // Assurer qu'on a une navigation
+  if (!res.locals.nav) {
+    res.locals.nav = '<ul><li><a href="/">Home</a></li></ul>';
   }
   
   console.error(`Error at: "${req.originalUrl}": ${err.message}`)
   
   let message;
-  if (err.status == 404) {
-    message = err.message;
+  let status = err.status || 500;
+  
+  if (status === 404) {
+    message = err.message || 'Page not found';
   } else {
     message = "Oh no! There was a crash. Maybe try a different route?";
   }
   
-  res.render("errors/error", {
-    title: err.status || "Server Error",
+  // RENDRE UNE SEULE FOIS
+  res.status(status).render("errors/error", {
+    title: status === 404 ? "404 Not Found" : "Server Error",
     message,
-    nav,
+    nav: res.locals.nav,
   });
 })
 
 /* ***********************
  * Local Server Information
- * Values from .env (environment) file
  *************************/
 const port = process.env.PORT || 5500
 const host = process.env.HOST || 'localhost'
 
 /* ***********************
- * Log statement to confirm server operation
+ * Start server
  *************************/
-app.listen(port, () => {
+app.listen(port, host, () => {
   console.log(`app listening on ${host}:${port}`)
 })
