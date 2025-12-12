@@ -12,8 +12,8 @@
             </div>
         <% } %>
         
-        <!-- Form action for update - AJOUT DE L'ID updateForm -->
-        <form action="/inv/update" method="post" class="needs-validation" novalidate id="updateForm">
+        
+        <form action="/inv/update/" method="post" class="needs-validation" novalidate id="updateForm">
             
             <!-- Hidden field for vehicle ID -->
             <input type="hidden" name="inv_id" value="<%= inv_id %>">
@@ -121,8 +121,8 @@
             <div class="d-flex justify-content-between mt-4">
                 <a href="/inv/" class="btn btn-secondary">Cancel</a>
                 
-                <!-- Submit button for update - AJOUT DE L'ATTRIBUT DISABLED -->
-                <button type="submit" class="btn btn-primary" disabled>Update Vehicle</button>
+              
+                <button type="submit" class="btn btn-primary">Update Vehicle</button>
             </div>
         </form>
     </div>
@@ -134,64 +134,30 @@
     'use strict'
     
     // Fetch all the forms we want to apply custom Bootstrap validation styles to
-    var forms = document.querySelectorAll('.needs-validation')
+    const forms = document.querySelectorAll('.needs-validation')
     
     // Loop over them and prevent submission
-    Array.prototype.slice.call(forms)
-        .forEach(function (form) {
-            form.addEventListener('submit', function (event) {
-                if (!form.checkValidity()) {
-                    event.preventDefault()
-                    event.stopPropagation()
-                }
-                
-                form.classList.add('was-validated')
-            }, false)
-        })
-})()
-
-// Form submission loading state
-document.querySelector('form').addEventListener('submit', function(e) {
-    const submitBtn = this.querySelector('button[type="submit"]');
-    submitBtn.disabled = true;
-    submitBtn.classList.add('loading');
-    submitBtn.innerHTML = 'Updating...';
-    
-    // Add slight delay to show loading state
-    setTimeout(() => {
-        submitBtn.innerHTML = 'Update Vehicle';
-        submitBtn.classList.remove('loading');
-        submitBtn.disabled = false;
-    }, 2000);
-});
-
-// Auto-save draft (optional)
-let autoSaveTimer;
-const form = document.querySelector('form');
-const formData = {};
-
-form.addEventListener('input', function(e) {
-    clearTimeout(autoSaveTimer);
-    autoSaveTimer = setTimeout(() => {
-        // Save form data to localStorage
-        Array.from(form.elements).forEach(element => {
-            if (element.name) {
-                formData[element.name] = element.value;
+    Array.from(forms).forEach(form => {
+        form.addEventListener('submit', function (event) {
+            console.log('Form submission validation');
+            
+            if (!form.checkValidity()) {
+                console.log('Form is invalid');
+                event.preventDefault();
+                event.stopPropagation();
+            } else {
+                console.log('Form is valid - submitting');
+                // Disables the button during submission
+                const submitBtn = this.querySelector('button[type="submit"]');
+                submitBtn.disabled = true;
+                submitBtn.textContent = 'Updating...';
+                submitBtn.classList.add('disabled');
             }
-        });
-        localStorage.setItem('inventoryDraft', JSON.stringify(formData));
-        console.log('Draft saved');
-    }, 1000);
-});
-
-// Load draft on page load (optional)
-window.addEventListener('load', function() {
-    const savedDraft = localStorage.getItem('inventoryDraft');
-    if (savedDraft) {
-        const draft = JSON.parse(savedDraft);
-        // Optionally load draft data
-    }
-});
+            
+            form.classList.add('was-validated');
+        }, false);
+    });
+})();
 </script>
 
 

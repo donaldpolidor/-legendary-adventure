@@ -194,12 +194,14 @@ main {
 /* CORRECTION: Enhanced vehicle thumbnails for all screens */
 .vehicle-thumbnail {
   width: 100%;
+  max-width: 300px; 
   height: 200px;
-  object-fit: cover;
-  border-radius: 8px;
-  margin-bottom: 1rem;
+  object-fit: contain; 
+  margin: 0 auto 1rem auto; 
+  display: block;
   background: #f8f9fa;
-  border: 2px dashed #dee2e6;
+  border: 1px solid #ddd;
+  border-radius: 4px;
 }
 
 .namePrice {
